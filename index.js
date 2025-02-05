@@ -211,6 +211,8 @@ var swiper = new Swiper(".mySwiper", {
 
 // validation
 
+const popUp = document.querySelector(".form__success");
+
 document
   .querySelector(".form__btn")
   .addEventListener("click", function (event) {
@@ -223,7 +225,10 @@ document
         "input__wrapper-error"
       );
       const errorSpan = inputWrapper.querySelector(".input__error");
-      if (errorSpan) errorSpan.textContent = "";
+      if (errorSpan) {
+        errorSpan.textContent = "";
+        errorSpan.removeAttribute("data-lang");
+      }
     });
 
     let isValid = true;
@@ -236,14 +241,17 @@ document
     if (nameValue === "") {
       nameWrapper.classList.add("input__wrapper-error");
       nameError.textContent = "Name is required.";
+      nameError.setAttribute("data-lang", "error__name_required");
       isValid = false;
     } else if (nameValue.length < 2 || nameValue.length > 20) {
       nameWrapper.classList.add("input__wrapper-error");
       nameError.textContent = "Name must be between 2 and 20 characters.";
+      nameError.setAttribute("data-lang", "error__name_length");
       isValid = false;
     } else if (!/^[A-Za-z\s]+$/.test(nameValue)) {
       nameWrapper.classList.add("input__wrapper-error");
       nameError.textContent = "Name must only contain letters.";
+      nameError.setAttribute("data-lang", "error__name_letters");
       isValid = false;
     } else {
       nameWrapper.classList.add("input__wrapper-validate");
@@ -260,6 +268,10 @@ document
     if (emailOrPhoneValue === "") {
       emailOrPhoneWrapper.classList.add("input__wrapper-error");
       emailOrPhoneError.textContent = "Email or phone number is required.";
+      emailOrPhoneError.setAttribute(
+        "data-lang",
+        "error__email_phone_required"
+      );
       isValid = false;
     } else if (
       /^\d+$/.test(emailOrPhoneValue) ||
@@ -270,6 +282,7 @@ document
         emailOrPhoneWrapper.classList.add("input__wrapper-error");
         emailOrPhoneError.textContent =
           "Phone number must be 10-15 digits, with or without '+' sign.";
+        emailOrPhoneError.setAttribute("data-lang", "error__phone_format");
         isValid = false;
       } else {
         emailOrPhoneWrapper.classList.add("input__wrapper-validate");
@@ -279,13 +292,120 @@ document
       if (!emailRegex.test(emailOrPhoneValue)) {
         emailOrPhoneWrapper.classList.add("input__wrapper-error");
         emailOrPhoneError.textContent = "Please enter a valid email address.";
+        emailOrPhoneError.setAttribute("data-lang", "error__email_format");
         isValid = false;
       } else {
         emailOrPhoneWrapper.classList.add("input__wrapper-validate");
       }
     }
 
+    const currentLang = localStorage.getItem("language") || "eng"; // Берем язык из localStorage
+    changeLanguage(currentLang);
+
     if (isValid) {
-      // то тут можно отправлять форму
+      // Можно отправлять форму
+      popUp.classList.add("active");
     }
   });
+
+function changeLanguage(lang) {
+  document.querySelector("#name").placeholder =
+    languages[lang]["placeholder__name"];
+  document.querySelector("#e-mail-or-phone").placeholder =
+    languages[lang]["placeholder__email_or_phone"];
+
+  document.querySelector('[data-lang="checkbox__p"]').textContent =
+    languages[lang]["checkbox__p"];
+  document.querySelector('[data-lang="form__send"]').textContent =
+    languages[lang]["form__send"];
+
+  document.querySelectorAll(".input__error").forEach((errorSpan) => {
+    const errorKey = errorSpan.getAttribute("data-lang");
+    if (errorKey && languages[lang][errorKey]) {
+      errorSpan.textContent = languages[lang][errorKey];
+    }
+  });
+}
+
+// faq
+
+// document.addEventListener("DOMContentLoaded", () => {
+const faqItems = document.querySelectorAll(".faq__item");
+
+faqItems.forEach((item) => {
+  const btn = item.querySelector(".faq__btn");
+  const answer = item.querySelector(".faq__answer");
+
+  btn.addEventListener("click", () => {
+    faqItems.forEach((el) => {
+      if (el !== item && el.classList.contains("active")) {
+        el.classList.remove("active");
+      }
+    });
+
+    item.classList.toggle("active");
+  });
+});
+// });
+
+// close popup
+const closePopUpBtn = popUp.querySelector(".form__success_close");
+const okPopUpBtn = popUp.querySelector(".form__success_btn");
+
+closePopUpBtn.addEventListener("click", () => {
+  popUp.classList.remove("active");
+});
+
+okPopUpBtn.addEventListener("click", () => {
+  popUp.classList.remove("active");
+});
+
+// links
+const scrollBtn = document.querySelector(".main__btn");
+const targetSection = document.querySelector(".map");
+
+const footerFindTheNeadestStation = document.querySelector(
+  "#find_the_nearest_station"
+);
+
+const footerPricingPolicy = document.querySelector("#pricing_policy");
+const pricingPolicyTarget = document.querySelector(".price");
+
+const footerFAQ = document.querySelector("#FAQ");
+const FAQSection = document.querySelector(".faq");
+
+scrollBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  window.scrollTo({
+    top: targetSection.offsetTop - 20,
+    behavior: "smooth",
+  });
+});
+
+footerFindTheNeadestStation.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  window.scrollTo({
+    top: targetSection.offsetTop - 20,
+    behavior: "smooth",
+  });
+});
+
+footerPricingPolicy.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  window.scrollTo({
+    top: pricingPolicyTarget.offsetTop - 20,
+    behavior: "smooth",
+  });
+});
+
+footerFAQ.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  window.scrollTo({
+    top: FAQSection.offsetTop - 20,
+    behavior: "smooth",
+  });
+});

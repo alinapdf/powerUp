@@ -24,6 +24,10 @@ body.dark {
   .swiper-slide {
     border: 1px solid var(--white);
   }
+  .faq__h3 {
+    background: var(--white);
+    -webkit-background-clip: text;
+  }
 }
 
 // header

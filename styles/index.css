@@ -25,6 +25,10 @@ body.dark .header--mobile {
 body.dark .swiper-slide {
   border: 1px solid var(--white);
 }
+body.dark .faq__h3 {
+  background: var(--white);
+  -webkit-background-clip: text;
+}
 
 .header {
   margin-top: 40px;
